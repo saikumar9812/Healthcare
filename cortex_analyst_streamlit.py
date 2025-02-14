@@ -27,21 +27,26 @@ def send_message(prompt: str) -> dict:
         "messages": [{"role": "user", "content": [{"type": "text", "text": prompt}]}],
         "semantic_model_file": f"@{DATABASE}.{SCHEMA}.{STAGE}/{FILE}",
     }
-    resp = requests.post(
-        url=f"https://{HOST}/api/v2/cortex/analyst/message",
-        json=request_body,
-        headers={
-            "Authorization": f'Snowflake Token="{st.session_state.CONN.rest.token}"',
-            "Content-Type": "application/json",
-        },
-    )
-    request_id = resp.headers.get("X-Snowflake-Request-Id")
-    if resp.status_code < 400:
-        return {**resp.json(), "request_id": request_id}
-    else:
-        raise Exception(
-            f"Failed request (id: {request_id}) with status {resp.status_code}: {resp.text}"
+    try:
+        resp = requests.post(
+            url=f"https://{HOST}/api/v2/cortex/analyst/message",
+            json=request_body,
+            headers={
+                "Authorization": f'Snowflake Token="{st.session_state.CONN.rest.token}"',
+                "Content-Type": "application/json",
+            },
         )
+        request_id = resp.headers.get("X-Snowflake-Request-Id")
+        if resp.status_code < 400:
+            return {**resp.json(), "request_id": request_id}
+        else:
+            st.error(f"Failed request (id: {request_id}) with status {resp.status_code}: {resp.text}")
+            raise Exception(
+                f"Failed request (id: {request_id}) with status {resp.status_code}: {resp.text}"
+            )
+    except Exception as e:
+        st.error(f"An error occurred: {e}")
+        raise
 
 def process_message(prompt: str) -> None:
     st.session_state.messages.append(
