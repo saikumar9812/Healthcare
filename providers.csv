@@ -1,0 +1,21 @@
+provider_id,provider_name,specialty,sessions_per_week,avg_appointment_duration
+1,Mr. Joshua Erickson,Cardiology,7,15
+2,Kyle Harris MD,Orthopedics,10,20
+3,Ariel Abbott,Pediatrics,9,20
+4,Diane Joseph,Orthopedics,6,20
+5,Dillon Patton,Orthopedics,6,15
+6,Tamara Meadows,Internal Medicine,8,20
+7,Jamie Lopez,Pediatrics,8,15
+8,Richard Jones,Pediatrics,7,20
+9,Gary Smith MD,Pediatrics,9,30
+10,Brandy Davis,Orthopedics,9,30
+11,Jacqueline Brown,Cardiology,8,15
+12,Gary Morton,Pediatrics,9,30
+13,Ashley Khan,Orthopedics,9,30
+14,Laura Guzman,Internal Medicine,6,20
+15,Aaron Smith,Cardiology,8,15
+16,Rebecca Murray,Internal Medicine,10,20
+17,Thomas Roberts,Cardiology,8,20
+18,Mr. Matthew Mckinney,Orthopedics,10,20
+19,Crystal Day,Family Medicine,6,20
+20,Bryce Yoder,Cardiology,7,20
