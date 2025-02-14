@@ -1,6 +1,8 @@
+from typing import List, Dict, Optional
 import pandas as pd
 import requests
-import snowflake.connector
+import snowflake as sf
+from snowflake import connector
 import streamlit as st
 
 HOST = "DRVZHHC-CUB31322.snowflakecomputing.com"
@@ -10,7 +12,7 @@ STAGE = "RAW_DATA"
 FILE = "revenue_timeseries.yaml"
 
 if 'CONN' not in st.session_state or st.session_state.CONN is None:
-    st.session_state.CONN = snowflake.connector.connect(
+    st.session_state.CONN = connector.connect(
         user="saikumar98125",
         password="Snowfl@ke123",
         account="DRVZHHC-CUB31322",
