@@ -1,182 +1,150 @@
-name: Revenue
+name: hcai
+description: ''
 tables:
-  - name: daily_revenue
-    description: Daily total revenue, aligned with daily "Cost of Goods Sold" (COGS), and forecasted revenue.
+  - name: appointments
     base_table:
       database: cortex_analyst_demo
-      schema: revenue_timeseries
-      table: daily_revenue
+      schema: healthcare
+      table: appointments
     primary_key:
       columns:
-        - date
-        - product_id
-        - region_id
+        - appointment_id
+    dimensions:
+      - name: appointment_id
+        expr: appointment_id
+        data_type: NUMBER(38,0)
+        description: The unique identifier for an appointment.
+      - name: patient_id
+        expr: patient_id
+        data_type: NUMBER(38,0)
+        description: Unique identifier for the patient associated with this appointment.
+      - name: provider_id
+        expr: provider_id
+        data_type: NUMBER(38,0)
+        description: The provider associated with the appointment.
+      - name: appointment_type
+        expr: appointment_type
+        data_type: VARCHAR(50)
+        description: The type of appointment or service being provided.
+      - name: status
+        expr: status
+        data_type: VARCHAR(20)
+        description: The current state of the appointment.
     time_dimensions:
-      - name: date
-        expr: date
-        description: date with measures of revenue, COGS, and forecasted revenue.
-        unique: true
-        data_type: date
-    measures:
-      - name: daily_revenue
-        expr: revenue
-        description: total revenue for the given day
-        synonyms: ["sales", "income"]
-        default_aggregation: sum
-        data_type: number
-      - name: daily_cogs
-        expr: cogs
-        description: total cost of goods sold for the given day
-        synonyms: ["cost", "expenditures"]
-        default_aggregation: sum
-        data_type: number
-      - name: daily_forecasted_revenue
-        expr: forecasted_revenue
-        description: total forecasted revenue for a given day
-        synonyms: ["forecasted sales", "forecasted income"]
-        default_aggregation: sum
-        data_type: number
-      - name: daily_profit
-        description: profit is the difference between revenue and expenses.
-        expr: revenue - cogs
-        data_type: number
-      - name: daily_forecast_abs_error
-        synonyms:
-          - absolute error
-          - L1
-        description: absolute error between forecasted and actual revenue
-        expr: abs(forecasted_revenue - revenue)
-        data_type: number
-        default_aggregation: avg
-    dimensions:
-      - name: product_id
-        expr: product_id
-        data_type: number
-      - name: region_id
-        expr: region_id
-        data_type: number
-
-  - name: product
-    description: Product dimension table with unique product identifiers and attributes.
+      - name: appointment_datetime
+        expr: appointment_datetime
+        data_type: TIMESTAMP_NTZ
+        description: The date and time of the appointment.
+      - name: scheduled_datetime
+        expr: scheduled_datetime
+        data_type: TIMESTAMP_NTZ
+        description: The date and time the appointment was scheduled.
+  - name: patients
     base_table:
       database: cortex_analyst_demo
-      schema: revenue_timeseries
-      table: product_dim
+      schema: healthcare
+      table: patients
     primary_key:
       columns:
-        - product_id
+        - patient_id
     dimensions:
-      - name: product_id
-        expr: product_id
-        data_type: number
-      - name: product_line
-        expr: product_line
-        description: Product line associated with revenue
-        data_type: varchar
-        sample_values:
-          - Electronics
-          - Clothing
-          - Home Appliances
-          - Toys
-          - Books
-
-  - name: region
-    description: Region dimension table with unique region identifiers and geographic attributes.
+      - name: patient_id
+        expr: patient_id
+        data_type: NUMBER(38,0)
+        description: Unique identifier for each patient.
+      - name: name
+        expr: name
+        data_type: VARCHAR(100)
+        description: The patient's full name.
+      - name: gender
+        expr: gender
+        data_type: VARCHAR(1)
+        description: The gender of the patient.
+      - name: insurance_type
+        expr: insurance_type
+        data_type: VARCHAR(20)
+        description: The type of health insurance.
+      - name: zip_code
+        expr: zip_code
+        data_type: VARCHAR(10)
+        description: The ZIP code of the patient's residence.
+      - name: distance_to_clinic
+        expr: distance_to_clinic
+        data_type: NUMBER(5,2)
+        description: The distance from the patient's residence to the clinic.
+    time_dimensions:
+      - name: dob
+        expr: dob
+        data_type: DATE
+        description: Date of Birth.
+  - name: providers
     base_table:
       database: cortex_analyst_demo
-      schema: revenue_timeseries
-      table: region_dim
+      schema: healthcare
+      table: providers
     primary_key:
       columns:
-        - region_id
+        - provider_id
     dimensions:
-      - name: region_id
-        expr: region_id
-        data_type: number
-      - name: sales_region
-        expr: sales_region
-        description: Region associated with revenue
-        data_type: varchar
-        sample_values:
-          - North America
-          - Europe
-          - Asia
-          - South America
-          - Africa
-
-  - name: product_dimension
+      - name: provider_id
+        expr: provider_id
+        data_type: NUMBER(38,0)
+        description: Unique identifier for each provider.
+      - name: provider_name
+        expr: provider_name
+        data_type: VARCHAR(100)
+        description: The name of the provider.
+      - name: specialty
+        expr: specialty
+        data_type: VARCHAR(50)
+        description: The provider’s medical specialty.
+  - name: schedule_templates
     base_table:
       database: cortex_analyst_demo
-      schema: revenue_timeseries
-      table: product_dim
-
+      schema: healthcare
+      table: schedule_templates
+    primary_key:
+      columns:
+        - provider_id
     dimensions:
-      - name: product_line
-        expr: product_line
-        cortex_search_service_name: product_line_search_service
-        data_type: varchar
-
-
+      - name: provider_id
+        expr: provider_id
+        data_type: NUMBER(38,0)
+        description: Unique identifier for the provider.
+      - name: start_time
+        expr: start_time
+        data_type: TIMESTAMP_NTZ
+        description: The starting time for the provider's shift.
+      - name: slot_type
+        expr: slot_type
+        data_type: VARCHAR(50)
+        description: The type of slot (e.g., morning, afternoon).
+      - name: duration
+        expr: duration
+        data_type: NUMBER(38,0)
+        description: The duration of each appointment slot.
 relationships:
-  - name: revenue_to_product
-    left_table: daily_revenue
-    right_table: product
-    relationship_columns:
-      - left_column: product_id
-        right_column: product_id
-    join_type: left_outer
+  - join_type: inner
+    name: pid_fk_app
     relationship_type: many_to_one
-
-  - name: revenue_to_region
-    left_table: daily_revenue
-    right_table: region
+    left_table: appointments
+    right_table: patients
     relationship_columns:
-      - left_column: region_id
-        right_column: region_id
-    join_type: left_outer
+      - left_column: patient_id
+        right_column: patient_id
+  - join_type: inner
+    name: provider_fk_app
     relationship_type: many_to_one
-
-  
-
-verified_queries:
- # For eval sample nlimtiaco_sc_3__0
-  - name: "daily cumulative expenses in 2023 dec"
-    question: "daily cumulative expenses in 2023 dec"
-    verified_at: 1714752498
-    verified_by: renee
-    sql: "
-SELECT
-  date,
-  SUM(daily_cogs) OVER (
-    ORDER BY
-      date ROWS BETWEEN UNBOUNDED PRECEDING
-      AND CURRENT ROW
-  ) AS cumulative_cogs
-FROM
-  daily_revenue
-WHERE
-  date BETWEEN '2023-12-01'
-  AND '2023-12-31'
-ORDER BY
-  date DESC;
-"
- # For eval sample nlimtiaco_sc_6__0
-  - name: "lowest revenue each month"
-    question: "For each month, what was the lowest daily revenue and on what date did that lowest revenue occur?"
-    sql: "WITH monthly_min_revenue AS (
-        SELECT
-          DATE_TRUNC('MONTH', date) AS month,
-          MIN(daily_revenue) AS min_revenue
-        FROM daily_revenue
-          GROUP BY
-            DATE_TRUNC('MONTH', date)
-        )
-        SELECT
-          mmr.month,
-          mmr.min_revenue,
-          dr.date AS min_revenue_date
-        FROM monthly_min_revenue AS mmr JOIN daily_revenue AS dr
-          ON mmr.month = DATE_TRUNC('MONTH', dr.date) AND mmr.min_revenue = dr.daily_revenue
-        ORDER BY mmr.month DESC NULLS LAST"
-    verified_at: 1715187400
-    verified_by: renee
+    left_table: appointments
+    right_table: providers
+    relationship_columns:
+      - left_column: provider_id
+        right_column: provider_id
+  - join_type: inner
+    name: provider_fk_sch
+    relationship_type: many_to_one
+    left_table: schedule_templates
+    right_table: providers
+    relationship_columns:
+      - left_column: provider_id
+        right_column: provider_id
