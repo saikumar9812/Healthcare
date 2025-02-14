@@ -9,7 +9,7 @@ HOST = "DRVZHHC-CUB31322.snowflakecomputing.com"
 DATABASE = "CORTEX_ANALYST_DEMO"
 SCHEMA = "HEALTHCARE"
 STAGE = "RAW_DATA"
-FILE = "revenue_timeseries.yaml.gz"  # Updated to include .gz extension
+FILE = "revenue_timeseries.yaml"  # Updated to include .gz extension
 
 if 'CONN' not in st.session_state or st.session_state.CONN is None:
     st.session_state.CONN = connector.connect(
