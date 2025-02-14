@@ -4,6 +4,7 @@ import requests
 import snowflake as sf
 from snowflake import connector
 import streamlit as st
+
 HOST = "DRVZHHC-CUB31322.snowflakecomputing.com"
 DATABASE = "CORTEX_ANALYST_DEMO"
 SCHEMA = "HEALTHCARE"
@@ -18,9 +19,8 @@ if 'CONN' not in st.session_state or st.session_state.CONN is None:
         host=HOST,
         port=443,
         warehouse="CORTEX_ANALYST_WH",
-        role="ACCOUNTADMIN",
+        role="cortex_user_role",  # Ensure this role has the necessary privileges
     )
-
 def send_message(prompt: str) -> dict:
     request_body = {
         "messages": [{"role": "user", "content": [{"type": "text", "text": prompt}]}],

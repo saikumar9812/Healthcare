@@ -97,3 +97,10 @@ PUT file://C:/Users/SaiKumarReddyKatika/Downloads/sfguide-getting-started-with-c
 PUT file://C:/Users/SaiKumarReddyKatika/Downloads/sfguide-getting-started-with-cortex-analyst-main/sfguide-getting-started-with-cortex-analyst-main/schedule_templates.csv @raw_data;
 
 LIST @raw_data;
+
+
+SHOW STAGES IN SCHEMA CORTEX_ANALYST_DEMO.HEALTHCARE;
+GRANT READ ON STAGE CORTEX_ANALYST_DEMO.HEALTHCARE.RAW_DATA TO ROLE cortex_user_role;
+GRANT WRITE ON STAGE CORTEX_ANALYST_DEMO.HEALTHCARE.RAW_DATA TO ROLE cortex_user_role;
+
+SHOW GRANTS ON STAGE CORTEX_ANALYST_DEMO.HEALTHCARE.RAW_DATA;
