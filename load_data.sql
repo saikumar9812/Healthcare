@@ -98,6 +98,8 @@ PUT file://C:/Users/SaiKumarReddyKatika/Downloads/sfguide-getting-started-with-c
 
 LIST @raw_data;
 
+LIST @CORTEX_ANALYST_DEMO.HEALTHCARE.RAW_DATA;
+PUT file://C:/Users/SaiKumarReddyKatika/Downloads/sfguide-getting-started-with-cortex-analyst-main/sfguide-getting-started-with-cortex-analyst-main/revenue_timeseries.yaml @CORTEX_ANALYST_DEMO.HEALTHCARE.RAW_DATA;
 
 SHOW STAGES IN SCHEMA CORTEX_ANALYST_DEMO.HEALTHCARE;
 GRANT READ ON STAGE CORTEX_ANALYST_DEMO.HEALTHCARE.RAW_DATA TO ROLE cortex_user_role;
